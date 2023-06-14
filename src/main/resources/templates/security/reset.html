@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/css/bootstrap.min.css">
+<div xmlns:th="http://www.thymeleaf.org/" th:replace="~{/layout/layout :: areas(~{::title},~{::main})}">
+    <main>
+        <div th:if="${param.success != null}">
+            <script th:inline="javascript">
+                $(document).ready(function () {
+                    window.alert("Thành công");
+                });
+            </script>
+        </div>
+        <div align="center">
+            <form th:action="@{/assignment/account/reset}" method="post" class="col-sm-8 col-sm-offset-2">
+                <form>
+                    <h1>User</h1>
+                    <div class="form-group">
+                        <label for="password">Pass To Reset</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordConfirm">Password Confirm</label>
+                        <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm">
+                    </div>
+                    <i class="text-danger" th:text="${message}"></i>
+                    <button type="submit" class="btn btn-primary">Reset</button>
+                </form>
+            </form>
+        </div>
+    </main>
+</div>

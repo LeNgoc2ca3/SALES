@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{/layout/layout :: areas(~{::title},~{::main})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="${ pageContext.request.contextPath }/css/bootstrap.min.css"></link>
+</head>
+<body>
+<main>
+    <div th:if="${param.success != null}">
+        <script th:inline="javascript">
+            $(document).ready(function () {
+                window.alert("Thành công");
+            });
+        </script>
+    </div>
+<!--    <div align="center">-->
+        <form th:action="@{/assignment/product}" method="get" class="form-horizontal">
+            <div class="form-group">
+                <label for="nameProduct" class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-10">
+                    <input type="text" id="nameProduct" name="nameProduct" th:value="${param.nameProduct}"
+                           class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="price1" class="control-label">Tìm giá theo khoảng</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">Từ</span>
+                            <input type="number" id="price1" name="price1" min="0" th:value="${param.price1}"
+                                   class="form-control"/>
+                            <span class="input-group-addon">đến</span>
+                            <input type="number" id="price2" name="price2" th:value="${param.price2}"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn-primary">Tìm</button>
+                    <a class="btn btn-danger" th:href="'/assignment/product'" type="button">Reset</a>
+                </div>
+            </div>
+
+            <h3>[[${message}]]</h3>
+        </form>
+
+        <div class="col-3">
+            <a class="btn btn-info text-white" th:href="'/assignment/product/add'">Add new</a>
+
+            <!-- Modal add -->
+            <div class="modal fade" id="modalAdd" role="dialog" tabindex="-1">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Add a new product</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form th:object="${product}" th:action="@{/assignment/product}" method="post"
+                                  class="col-sm-8 col-sm-offset-2">
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input th:field="*{name}" id="name" class="form-control"/><i th:errors="*{name}"/><i
+                                        th:errors="*{name}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="image">Image</label>
+                                    <input th:field="*{image}" type="file" id="image" class="form-control-file"/><i
+                                        th:errors="*{image}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="price">Price</label>
+                                    <input th:field="*{price}" id="price" class="form-control"/><i
+                                        th:errors="*{price}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quantity">Quantity</label>
+                                    <input th:field="*{quantity}" type="number" min="0" value="0" id="quantity"
+                                           name="quantity" class="form-control"/><i th:errors="*{quantity}"/>
+                                    <!--                            <div class="invalid-feedback">Please enter a quantity.</div>-->
+                                </div>
+                                <div class="form-group">
+                                    <label for="category">Category</label>
+                                    <select th:field="*{categoriesDTO.id}" id="category" class="form-control">
+                                        <!--                                <option value="">Choose a category</option>-->
+                                        <option th:each="i : ${listCate}" th:value="${i.id}"
+                                                th:text="${i.name}"></option>
+                                    </select>
+                                    <!--                            <div class="invalid-feedback">Please select a category.</div>-->
+                                </div>
+
+                                <a class="btn btn-info text-white" data-toggle="modal"
+                                   data-target="#modalAddObject">Add</a>
+
+                                <div class="modal fade" id="modalAddObject" role="dialog" tabindex="-1">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="staticBackdropLabel">Bạn có muốn thêm
+                                                    không</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <button>Có</button>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <form>
+            <table class="table striped" width="100%" height="500px">
+                <thead>
+                <th>
+                <td>STT</td>
+                <td>Name</td>
+                <td>Category image</td>
+                <td>Price</td>
+                <td>Quantity</td>
+                <td>Available</td>
+                <td>Category</td>
+                <td>Action</td>
+                </th>
+                </thead>
+                <tbody>
+                <th:block th:if="${not #lists.isEmpty(listProduct.content)}">
+                    <tr th:each="item, index : ${listProduct.content}">
+                        <td></td>
+                        <td th:utext="${index.count}"></td>
+                        <td th:utext="${item.name}"></td>
+                        <td><img th:src="@{'/assets/images/' + ${item.image}}"
+                                 width="50" height="50"></td>
+                        <td>[[${item.price}]] Vnđ</td>
+                        <td th:utext="${item.quantity}"></td>
+                        <td th:utext="${item.available == 1 ? 'Còn hàng' : 'Hết hàng'}"></td>
+                        <td th:utext="${item.categories.name}"></td>
+                        <td>
+                            <button
+                                    class="btn btn-info text-white" th:formaction="'/assignment/product/' + ${item.id}"
+                                    th:formmethod="get">Chi tiết
+                            </button>
+                            <button
+                                    class="btn btn-danger" th:formmethod="get"
+                                    th:formaction="'/assignment/product/update/' + ${item.id}">Cập nhật
+                            </button>
+                    </tr>
+                </th:block>
+                <th:block th:if="${listProduct.isEmpty()}">
+                    <!-- Hiển thị thông báo khi CH rỗng -->
+                    <tr>
+                        <td colspan="7">Không có dữ liệu</td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+            <div>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{'?page=0' + '&nameProduct=' + ${nameProduct} + ${price1 != null ? '&price1=' + price1 : ''} + ${price2 != null ? '&price2=' + price2 : ''}}">First</a>
+                    </li>
+                    <li class="page-item" th:if="${listProduct.number > 0}">
+                        <a class="page-link"
+                           th:href="@{'?page='+${listProduct.number - 1} + '&nameProduct=' + ${nameProduct} +  ${price1 != null ? '&price1=' + price1 : ''} + ${price2 != null ? '&price2=' + price2 : ''}}">Previous</a>
+                    </li>
+                    <!--            <li class="page-item" th:each="i : ${#numbers.sequence(0, listProduct.totalPages - 1)}"-->
+                    <!--                th:class="${listProduct.number == i} ? 'active' : ''">-->
+                    <!--                <a class="page-link" th:href="'/assignment/product?page=' +${i}" th:text="${i+1}"></a>-->
+                    <!--            </li>-->
+                    <li class="page-item" th:if="${listProduct.number < listProduct.totalPages - 1}">
+                        <a class="page-link"
+                           th:href="@{'?page='+${listProduct.number + 1} + '&nameProduct=' + ${nameProduct} + ${price1 != null ? '&price1=' + price1 : ''} + ${price2 != null ? '&price2=' + price2 : ''}}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{'?page=' +${listProduct.totalPages - 1} + '&nameProduct=' + ${nameProduct} + ${price1 != null ? '&price1=' + price1 : ''} + ${price2 != null ? '&price2=' + price2 : ''}}">Last</a>
+                    </li>
+                </ul>
+            </div>
+        </form>
+<!--    </div>-->
+</main>
+</body>
+</html>
